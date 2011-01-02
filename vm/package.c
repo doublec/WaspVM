@@ -22,6 +22,7 @@
 #define PKG_LIST    3
 #define PKG_STR     4
 #define PKG_SYM     5
+#define PKG_ROBJ    6
 
 #ifdef WASP_IN_WIN32
 // We need hton and ntoh
@@ -120,6 +121,19 @@ wasp_value wasp_thaw_mem( const void* mem, wasp_quad memlen ){
                 values, record_ix, 
                 wasp_vf_symbol( wasp_symbol_fm( next_block(ln), ln ) ) );
             break;
+        case PKG_ROBJ:  // Real's are stored as strings
+            {
+                char* hd = 0;
+                int ok = 0;
+                ln = next_word();
+                hd = wasp_sf_string( wasp_string_fm( next_block(ln), ln ) );
+                wasp_vector_put(values, record_ix,
+                                wasp_vf_real( wasp_parse_real( &hd, &ok ) ) );
+                if( !ok ){
+                    err( "bad record type reading real value" );
+                }
+            }
+            break;
         default:
             err( "bad record type" );
         }
@@ -190,6 +204,9 @@ wasp_value wasp_thaw_mem( const void* mem, wasp_quad memlen ){
         case PKG_SYM: // Symbol
             next_block( next_word( ) );
             break;
+        case PKG_ROBJ:  // Real
+            next_block( next_word( ) );
+            break;
         default:
             err( "bad record type" );
         }
@@ -258,8 +275,8 @@ wasp_string wasp_freeze( wasp_value root ){
             // Do nothing -- strings do not contain references.
         }else if( wasp_is_symbol( value ) ){
             // Do nothing -- symbols do not contain references.
-        }else if( wasp_is_integer( value ) ){
-            //Do nothing -- integers do not contain references.
+        }else if( wasp_is_number( value ) ){
+            //Do nothing -- numbers do not contain references.
         }else if( wasp_is_procedure( value ) ){
             // Hoo boy. Here we go..
             wasp_procedure proc = wasp_procedure_fv( value );
@@ -292,6 +309,13 @@ wasp_string wasp_freeze( wasp_value root ){
             if( wasp_is_integer( item ) ){
                 wasp_string_append_byte( pkg, PKG_IOBJ );
                 wasp_string_append_quad( pkg, wasp_integer_fv( item ) );
+            }else if( wasp_is_real( item ) ){
+                wasp_string_append_byte( pkg, PKG_ROBJ );
+                wasp_string s = wasp_make_string( 128 );
+                wasp_string_append_real( s, wasp_real_fv( item ) );
+                wasp_string_append_word( pkg, wasp_string_length( s ) );
+                wasp_string_append( pkg,
+                                    wasp_sf_string( s ), wasp_string_length( s ) );
             }else if( wasp_is_pair( item ) ){
                 //TODO: Detect Lists.
                 wasp_string_append_byte( pkg, PKG_PAIR );

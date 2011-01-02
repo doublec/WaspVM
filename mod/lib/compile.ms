@@ -170,7 +170,7 @@
 
 (define (compile-lisp-expr env expr)
   (cond ((or (boolean? expr) 
-             (integer? expr)
+             (number? expr)
              (string? expr)
              (procedure? expr)
              (null? expr))
