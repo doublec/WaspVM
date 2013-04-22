@@ -27,7 +27,7 @@
 (import "mosref/cmd/on")
 (import "mosref/cmd/proxy")
 (import "mosref/cmd/recover")
-;(import "mosref/cmd/scan")
+(import "mosref/cmd/scan")
 (import "mosref/cmd/set")
 (import "mosref/cmd/sh")
 (import "mosref/cmd/with")

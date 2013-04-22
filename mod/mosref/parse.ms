@@ -43,15 +43,15 @@
             (when m (return m))
               
           (define m (match-regex *rx-addr* r))
-          (when m (return (resolve-addr m)))
+          (when m (return (resolve-ipv4 m)))
               
           (define m (match-regex *rx-addr-range* r))
-          (when m (return (list (resolve-addr (car m))
-                                (resolve-addr (cadr m)))))
+          (when m (return (list (resolve-ipv4 (car m))
+                                (resolve-ipv4 (cadr m)))))
              
           (define m (match-regex *rx-cidr* r))
           (when m 
-            (define h (resolve-addr (car m)))
+            (define h (resolve-ipv4 (car m)))
             (define d (parse-mask (cadr m)))
             (return (list (cidr-min h d)
                           (cidr-max h d))))
