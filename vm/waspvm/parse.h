@@ -27,6 +27,7 @@ wasp_quad wasp_parse_dec( char** r_str, wasp_boolean* r_succ );
 wasp_quad wasp_parse_hex( char** r_str, wasp_boolean* r_succ );
 wasp_quad wasp_parse_hex2( char** r_str, wasp_boolean* r_succ );
 wasp_integer wasp_parse_int( char** r_str, wasp_boolean* r_succ );
+wasp_real wasp_parse_real( char** r_str, wasp_boolean* r_succ );
 
 wasp_symbol wasp_parse_sym( char** r_str, wasp_boolean* r_succ );
 

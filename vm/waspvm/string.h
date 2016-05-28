@@ -97,6 +97,7 @@ void wasp_string_append_sym( wasp_string buf, wasp_symbol s );
 void wasp_string_append_addr( wasp_string buf, wasp_integer i );
 void wasp_string_append_cs( wasp_string buf, const char* c );
 void wasp_string_append_exprs( wasp_string str, wasp_list list );
+void wasp_string_append_real( wasp_string str, wasp_real number );
 wasp_string wasp_exprs_to_string( wasp_list exprs );
 
 wasp_string wasp_reads_string( wasp_string string );

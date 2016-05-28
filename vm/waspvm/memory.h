@@ -28,6 +28,7 @@ typedef unsigned short wasp_word;
 typedef unsigned long wasp_quad;
 typedef signed long wasp_integer;
 typedef int wasp_boolean;
+typedef double wasp_real;
 
 #else
 
@@ -38,6 +39,7 @@ typedef uint16_t wasp_word;
 typedef uint32_t wasp_quad;
 typedef int32_t wasp_integer;
 typedef int wasp_boolean;
+typedef double wasp_real;
 
 #endif
 

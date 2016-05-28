@@ -200,6 +200,24 @@ WASP_BEGIN_PRIM( "string->integer", string_to_integer )
     RESULT( wasp_vf_integer( i ) );
 WASP_END_PRIM( string_to_integer )
 
+WASP_BEGIN_PRIM( "string->real", string_to_real )
+    REQ_STRING_ARG( string )
+    NO_REST_ARGS( )
+
+    char* hd = wasp_sf_string( string );
+    char* pt = hd;
+    int ok = 0;
+
+    wasp_real f = wasp_parse_real( &pt, &ok );
+
+    if( ! ok ){
+        wasp_errf( wasp_es_vm, "s", "could not parse real" );
+    }else if( ( pt - hd ) != wasp_string_length( string ) ){
+        wasp_errf( wasp_es_vm, "ss", "garbage trails real", hd );
+    }
+    RESULT( wasp_vf_real( f ) );
+WASP_END_PRIM( string_to_real )
+
 WASP_BEGIN_PRIM( "vector->list", vector_to_list )
     REQ_VECTOR_ARG( v );
     NO_REST_ARGS( );
@@ -337,24 +355,28 @@ WASP_BEGIN_PRIM( "abs", m_abs )
 WASP_END_PRIM( m_abs )
 
 WASP_BEGIN_PRIM( "*", m_mul )
-    REQ_INTEGER_ARG( v0 );
+    wasp_value v0 = wasp_req_any( );
     for(;;){
-        OPT_INTEGER_ARG( vN );
-        if( ! has_vN )break;
-        v0 *= vN;
-    };
-    RESULT( wasp_vf_integer( v0 ) );
+        wasp_boolean has_x;
+        wasp_value x = wasp_opt_any( &has_x );
+        if( ! has_x )break;
+        v0 = wasp_num_multiply( v0, x );
+    }
+
+    RESULT( v0 );
 WASP_END_PRIM( m_mul )
 
 WASP_BEGIN_PRIM( "/", m_div )
-    REQ_INTEGER_ARG( v0 );
+    wasp_value v0 = wasp_req_any( );
     for(;;){
-        OPT_INTEGER_ARG( vN );
-        if( ! has_vN )break;
-        if( ! vN )wasp_errf( wasp_es_vm, "s", "attempted divide by zero" );
-        v0 /= vN;
-    };
-    RESULT( wasp_vf_integer( v0 ) );
+        wasp_boolean has_x;
+        wasp_value x = wasp_opt_any( &has_x );
+        if( ! has_x )break;
+        if( ! x )wasp_errf( wasp_es_vm, "s", "attempted divide by zero" );
+        v0 = wasp_num_divide( v0, x );
+    }
+
+    RESULT( v0 );
 WASP_END_PRIM( m_div )
 
 WASP_BEGIN_PRIM( "quotient", quotient )
@@ -522,6 +544,12 @@ WASP_BEGIN_PRIM( "integer?", integerq )
     NO_REST_ARGS( );
     RESULT( wasp_vf_boolean( ( wasp_is_integer( v ) ) ) );
 WASP_END_PRIM( integerq )
+
+WASP_BEGIN_PRIM( "real?", realq )
+    REQ_ANY_ARG( v );
+    NO_REST_ARGS( );
+    RESULT( wasp_vf_boolean( ( wasp_is_real( v ) ) ) );
+WASP_END_PRIM( realq )
 
 WASP_BEGIN_PRIM( "cons", cons )
     REQ_ANY_ARG( car );
@@ -1934,6 +1962,7 @@ void wasp_bind_core_prims( ){
     wasp_vf_string( wasp_string_fs( WASP_PLATFORM ) ) );
 
     WASP_BIND_PRIM( integerq );
+    WASP_BIND_PRIM( realq );
     WASP_BIND_PRIM( listq );
     WASP_BIND_PRIM( cons );
     WASP_BIND_PRIM( car );
@@ -2075,6 +2104,7 @@ void wasp_bind_core_prims( ){
     WASP_BIND_PRIM( string_tail );
 
     WASP_BIND_PRIM( string_to_integer )
+    WASP_BIND_PRIM( string_to_real )
     WASP_BIND_PRIM( string_replace )
     
     WASP_BIND_PRIM( strip_head );

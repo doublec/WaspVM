@@ -20,6 +20,7 @@
 
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 #include "waspvm.h"
 
 wasp_integer wasp_parse_incomplete = 0;
@@ -35,6 +36,7 @@ const char* wasp_em_extra_tail = "superfluous value after \".\"";
 const char* wasp_em_badsharp = "expected \"t\" or \"f\" after \"#\"";
 const char* wasp_em_begp = "\")\" unmatched by \"(\"";
 const char* wasp_em_baddot = "did not expect \".\"";
+const char* wasp_em_badreal = "expected real number";
 
 wasp_quad wasp_parse_dec( char** r_str, wasp_boolean* r_succ ){
     char* str = *r_str;
@@ -142,6 +144,46 @@ wasp_integer wasp_parse_int( char** r_str, wasp_boolean* r_succ ){
     default:
         return wasp_parse_dec( r_str, r_succ );
     }
+}
+
+wasp_real wasp_parse_real( char** r_str, wasp_boolean* r_succ ){
+    wasp_real f = 0.0;
+    char* str = *r_str;
+    char* end = 0;
+
+    errno = 0;
+    f = strtod( str, &end );
+
+    if( ( errno != 0 && f == 0.0 ) || str == end ){
+        wasp_parse_errmsg = wasp_em_badreal;
+	wasp_parse_incomplete = 1;
+	*r_succ = 0;
+    }
+    else{
+        *r_str = end;
+        *r_succ = 1;
+    }
+
+    return f;
+}
+
+wasp_number wasp_parse_number( char** r_str, wasp_boolean* r_succ ){
+    /* Look for real number first. If that fails fall back to integer */
+    char* start = *r_str;
+    if (*start == '+' || *start == '-')
+        ++start;
+
+    while( isdigit( *start ) )
+        ++start;
+
+    if (*start == '.' ){
+        wasp_real r = wasp_parse_real( r_str, r_succ );
+        if( *r_succ ){
+            return wasp_nf_real( r );
+        }
+    }
+
+    return wasp_nf_integer( wasp_parse_int ( r_str, r_succ ) );
 }
 
 wasp_symbol wasp_parse_sym( char** r_str, wasp_boolean* r_succ ){
@@ -345,6 +387,9 @@ wasp_value wasp_parse_value_inner( char** r_str, wasp_boolean* r_succ ){
         wasp_parse_errmsg = wasp_em_more;
         wasp_parse_incomplete = 1;
         break;
+    case '$':
+        x = wasp_vf_integer( wasp_parse_int( &str, r_succ ) );
+        break;
     case '0':
     case '1':
     case '2':
@@ -355,8 +400,7 @@ wasp_value wasp_parse_value_inner( char** r_str, wasp_boolean* r_succ ){
     case '7':
     case '8':
     case '9':
-    case '$':
-        x = wasp_vf_integer( wasp_parse_int( &str, r_succ ) );
+        x = wasp_vf_number( wasp_parse_number( &str, r_succ ) );
         break;
     case '@':
         str ++;
@@ -381,7 +425,7 @@ wasp_value wasp_parse_value_inner( char** r_str, wasp_boolean* r_succ ){
     case '-':
     case '+':
         if( isdigit( *( str + 1 ) ) ){
-            x = wasp_vf_integer( wasp_parse_int( &str, r_succ ) );
+            x = wasp_vf_number( wasp_parse_number( &str, r_succ ) );
         }else{
             wasp_symbol s = wasp_parse_sym( &str, r_succ );
             if( *r_succ ) x = wasp_vf_symbol( s );

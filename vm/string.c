@@ -17,6 +17,7 @@
 #include "waspvm.h"
 #include <string.h>
 #include <ctype.h>
+#include <stdio.h> // for snprintf
 
 //TODO: Do not leave in
 #undef NDEBUG
@@ -541,6 +542,12 @@ void wasp_string_append_exprs( wasp_string str, wasp_list list ){
         }
     };
 }
+
+void wasp_string_append_real( wasp_string str, wasp_real number ){
+    char buffer[256];
+    snprintf( buffer, sizeof(buffer), "%f", number );
+    wasp_string_append_cs( str, buffer );
+};
 
 wasp_string wasp_exprs_to_string( wasp_list exprs ){
     wasp_string str = wasp_make_string( 256 );
