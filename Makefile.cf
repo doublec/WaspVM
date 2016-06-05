@@ -91,5 +91,5 @@ CFLAGS += -DWASP_PLATFORM='"$(PLATFORM)"'
 ifeq ($(OS),Darwin)
 EXEFLAGS += $(STATICLIBS) $(DYNAMICLIBS)
 else
-EXEFLAGS += -Wl,-Bstatic $(STATICLIBS) -Wl,-Bdynamic $(DYNAMICLIBS)
+EXEFLAGS += -static $(STATICLIBS) $(DYNAMICLIBS)
 endif
