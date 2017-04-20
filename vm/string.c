@@ -498,6 +498,8 @@ void wasp_string_append_expr( wasp_string str, wasp_value expr ){
         wasp_format_symbol( str, wasp_symbol_fv( expr ) );
     }else if( wasp_is_integer( expr ) ){
         wasp_string_append_signed( str, wasp_integer_fv( expr ) );
+    }else if( wasp_is_real( expr ) ){
+        wasp_string_append_real( str, wasp_real_fv ( expr ) );
     }else if( wasp_is_boolean( expr ) ){
         wasp_format_boolean( str, expr );
     }else if( wasp_is_pair( expr ) ){
