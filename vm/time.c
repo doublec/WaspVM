@@ -18,16 +18,18 @@
 
 wasp_symbol wasp_ss_timeout;
 
-/*
-
 void wasp_get_now( wasp_quad* secs, wasp_quad* nsecs ){
+    struct timeval now;
+    gettimeofday(&now, NULL);
+    *secs = now.tv_sec;
+    *nsecs = now.tv_usec * 1000;
+/*
     struct timespec ts;
     clock_gettime( CLOCK_REALTIME, &ts );
     *secs = ts.tv_sec;
     *nsecs = ts.tv_nsec;
-}
-
 */
+}
 
 void wasp_task_cb( int fd, short evt, void* context ){
     wasp_task task = (wasp_task) context; 
@@ -146,6 +148,15 @@ WASP_BEGIN_PRIM( "pause", pause )
     wasp_proc_loop( );
 WASP_END_PRIM( pause )
 
+WASP_BEGIN_PRIM( "now", now )
+    wasp_quad secs;
+    wasp_quad nsecs;
+
+    wasp_get_now( &secs, &nsecs );
+
+    REAL_RESULT( (double)secs + nsecs / 1e9 );
+WASP_END_PRIM( pause )
+
 void wasp_init_time_subsystem( ){
     WASP_I_TYPE( task );
     wasp_ss_timeout = wasp_symbol_fs( "timeout" );
@@ -153,5 +164,6 @@ void wasp_init_time_subsystem( ){
     WASP_BIND_PRIM( timeout );
     WASP_BIND_PRIM( cancel_timeout );
     WASP_BIND_PRIM( pause );
+    WASP_BIND_PRIM( now );
 }
 
