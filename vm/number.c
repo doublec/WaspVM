@@ -144,7 +144,7 @@ wasp_value wasp_num_minus( wasp_value lhs, wasp_value rhs ){
     else if( wasp_is_integer( lhs ) && wasp_is_real( rhs ) )
         return wasp_vf_real( wasp_integer_fv( lhs ) - wasp_real_fv( rhs ) );
     else if( wasp_is_real( lhs ) && wasp_is_integer( rhs ) )
-        return wasp_vf_real( wasp_real_fv( lhs ) * wasp_integer_fv( rhs ) );
+        return wasp_vf_real( wasp_real_fv( lhs ) - wasp_integer_fv( rhs ) );
     else if( wasp_is_real( lhs ) && wasp_is_real( rhs ) )
         return wasp_vf_real( wasp_real_fv( lhs ) - wasp_real_fv( rhs ) );
 }
