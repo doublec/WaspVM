@@ -195,7 +195,7 @@ wasp_symbol wasp_parse_sym( char** r_str, wasp_boolean* r_succ ){
 
     for(;;)switch( *str ){
     case ';':
-    case '.':
+//    case '.':
     case ')':
     case ' ':
     case '\r':
