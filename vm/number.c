@@ -31,12 +31,16 @@ void wasp_format_number( wasp_string buf, wasp_value v ){
 wasp_integer wasp_number_compare( wasp_value a, wasp_value b ){
     if( wasp_is_integer( a ) && wasp_is_integer( b ) )
         return wasp_integer_fv( a ) - wasp_integer_fv( b );
-    else if( wasp_is_integer( a ) && wasp_is_real( b ) )
-        return (wasp_integer)( wasp_integer_fv( a ) - wasp_real_fv( b ) );
-    else if( wasp_is_real( a ) && wasp_is_integer( b ) )
-        return (wasp_integer)( wasp_real_fv( a ) - wasp_integer_fv( b ) );
-    else if( wasp_is_real( a ) && wasp_is_real( b ) )
-        return (wasp_integer)( wasp_real_fv( a ) - wasp_real_fv( b ) );
+    else if( wasp_is_integer( a ) && wasp_is_real( b ) ){
+        wasp_real r = wasp_integer_fv( a ) - wasp_real_fv( b );
+        return (wasp_integer)( r < 0 ? -1 : ( r > 0 ? 1 : 0 ) );
+    }else if( wasp_is_real( a ) && wasp_is_integer( b ) ){
+        wasp_real r = wasp_real_fv( a ) - wasp_integer_fv( b );
+        return (wasp_integer)( r < 0 ? -1 : ( r > 0 ? 1 : 0 ) );
+    }else if( wasp_is_real( a ) && wasp_is_real( b ) ){
+        wasp_real r = wasp_real_fv( a ) - wasp_real_fv( b );
+        return (wasp_integer)( r < 0 ? -1 : ( r > 0 ? 1 : 0 ) );
+    }
 }
 
 WASP_GENERIC_GC( number );

@@ -741,78 +741,79 @@ WASP_BEGIN_PRIM( "string-fill!", string_fill )
 WASP_END_PRIM( string_fill )
 
 WASP_BEGIN_PRIM( "=", m_eq )
-    REQ_INTEGER_ARG( v0 );
-   
+    wasp_value v0 = wasp_req_any( );
     for(;;){
-        OPT_INTEGER_ARG( vN );
-        if( ! has_vN )break;
-        if( !( v0 == vN ) ){ RESULT( wasp_vf_false( ) ); };
-    };
+        wasp_boolean has_x;
+        wasp_value x = wasp_opt_any( &has_x );
+        if( ! has_x )break;
+        if( !( wasp_number_compare( v0, x ) == 0 ) ){ RESULT( wasp_vf_false( ) ); };
+        v0 = x;
+    }
 
     RESULT( wasp_vf_true( ) );
 WASP_END_PRIM( m_eq )
 
 WASP_BEGIN_PRIM( "<", m_lt )
-    REQ_INTEGER_ARG( v0 );
-   
+    wasp_value v0 = wasp_req_any( );
     for(;;){
-        OPT_INTEGER_ARG( vN );
-        if( ! has_vN )break;
-        if( !( v0 < vN ) ){ RESULT( wasp_vf_false( ) ); };
-        v0 = vN;
-    };
+        wasp_boolean has_x;
+        wasp_value x = wasp_opt_any( &has_x );
+        if( ! has_x )break;
+        if( !( wasp_number_compare( v0, x ) < 0 ) ){ RESULT( wasp_vf_false( ) ); };
+        v0 = x;
+    }
 
     RESULT( wasp_vf_true( ) );
 WASP_END_PRIM( m_lt )
 
 WASP_BEGIN_PRIM( ">", m_gt )
-    REQ_INTEGER_ARG( v0 );
-   
+    wasp_value v0 = wasp_req_any( );
     for(;;){
-        OPT_INTEGER_ARG( vN );
-        if( ! has_vN )break;
-        if( !( v0 > vN ) ){ RESULT( wasp_vf_false( ) ); };
-        v0 = vN;
-    };
+        wasp_boolean has_x;
+        wasp_value x = wasp_opt_any( &has_x );
+        if( ! has_x )break;
+        if( !( wasp_number_compare( v0, x ) > 0 ) ){ RESULT( wasp_vf_false( ) ); };
+        v0 = x;
+    }
 
     RESULT( wasp_vf_true( ) );
 WASP_END_PRIM( m_gt )
 
 WASP_BEGIN_PRIM( "<=", m_lte )
-    REQ_INTEGER_ARG( v0 );
-   
+    wasp_value v0 = wasp_req_any( );
     for(;;){
-        OPT_INTEGER_ARG( vN );
-        if( ! has_vN )break;
-        if( !( v0 <= vN ) ){ RESULT( wasp_vf_false( ) ); };
-        v0 = vN;
-    };
+        wasp_boolean has_x;
+        wasp_value x = wasp_opt_any( &has_x );
+        if( ! has_x )break;
+        if( !( wasp_number_compare( v0, x ) <= 0 ) ){ RESULT( wasp_vf_false( ) ); };
+        v0 = x;
+    }
 
     RESULT( wasp_vf_true( ) );
 WASP_END_PRIM( m_lte )
 
 WASP_BEGIN_PRIM( ">=", m_gte )
-    REQ_INTEGER_ARG( v0 );
-   
+    wasp_value v0 = wasp_req_any( );
     for(;;){
-        OPT_INTEGER_ARG( vN );
-        if( ! has_vN )break;
-        if( !( v0 >= vN ) ){ RESULT( wasp_vf_false( ) ); };
-        v0 = vN;
-    };
+        wasp_boolean has_x;
+        wasp_value x = wasp_opt_any( &has_x );
+        if( ! has_x )break;
+        if( !( wasp_number_compare( v0, x ) >= 0 ) ){ RESULT( wasp_vf_false( ) ); };
+        v0 = x;
+    }
 
     RESULT( wasp_vf_true( ) );
 WASP_END_PRIM( m_gte )
 
 WASP_BEGIN_PRIM( "!=", m_ne )
-    REQ_INTEGER_ARG( v0 );
-   
+    wasp_value v0 = wasp_req_any( );
     for(;;){
-        OPT_INTEGER_ARG( vN );
-        if( ! has_vN )break;
-        if( !( v0 != vN ) ){ RESULT( wasp_vf_false( ) ); };
-        v0 = vN;
-    };
+        wasp_boolean has_x;
+        wasp_value x = wasp_opt_any( &has_x );
+        if( ! has_x )break;
+        if( !( wasp_number_compare( v0, x ) != 0 ) ){ RESULT( wasp_vf_false( ) ); };
+        v0 = x;
+    }
 
     RESULT( wasp_vf_true( ) );
 WASP_END_PRIM( m_ne )
