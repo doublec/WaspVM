@@ -40,6 +40,13 @@ wasp_integer wasp_number_compare( wasp_value a, wasp_value b ){
     }else if( wasp_is_real( a ) && wasp_is_real( b ) ){
         wasp_real r = wasp_real_fv( a ) - wasp_real_fv( b );
         return (wasp_integer)( r < 0 ? -1 : ( r > 0 ? 1 : 0 ) );
+    }else{
+        if( !wasp_is_number( a ) ){
+            wasp_errf( wasp_es_vm, "sx", "expected number", a );
+        }
+        if( !wasp_is_number( b ) ){
+            wasp_errf( wasp_es_vm, "sx", "expected number", b );
+        }
     }
 }
 
@@ -140,6 +147,14 @@ wasp_value wasp_num_plus( wasp_value lhs, wasp_value rhs ){
         return wasp_vf_real( wasp_real_fv( lhs ) + wasp_integer_fv( rhs ) );
     else if( wasp_is_real( lhs ) && wasp_is_real( rhs ) )
         return wasp_vf_real( wasp_real_fv( lhs ) + wasp_real_fv( rhs ) );
+    else{
+        if( !wasp_is_number( lhs ) ){
+            wasp_errf( wasp_es_vm, "sx", "expected number", lhs );
+        }
+        if( !wasp_is_number( rhs ) ){
+            wasp_errf( wasp_es_vm, "sx", "expected number", rhs );
+        }
+    }
 }
 
 wasp_value wasp_num_minus( wasp_value lhs, wasp_value rhs ){
@@ -151,6 +166,14 @@ wasp_value wasp_num_minus( wasp_value lhs, wasp_value rhs ){
         return wasp_vf_real( wasp_real_fv( lhs ) - wasp_integer_fv( rhs ) );
     else if( wasp_is_real( lhs ) && wasp_is_real( rhs ) )
         return wasp_vf_real( wasp_real_fv( lhs ) - wasp_real_fv( rhs ) );
+    else{
+        if( !wasp_is_number( lhs ) ){
+            wasp_errf( wasp_es_vm, "sx", "expected number", lhs );
+        }
+        if( !wasp_is_number( rhs ) ){
+            wasp_errf( wasp_es_vm, "sx", "expected number", rhs );
+        }
+    }
 }
 
 wasp_value wasp_num_multiply( wasp_value lhs, wasp_value rhs ){
@@ -162,6 +185,14 @@ wasp_value wasp_num_multiply( wasp_value lhs, wasp_value rhs ){
         return wasp_vf_real( wasp_real_fv( lhs ) * wasp_integer_fv( rhs ) );
     else if( wasp_is_real( lhs ) && wasp_is_real( rhs ) )
         return wasp_vf_real( wasp_real_fv( lhs ) * wasp_real_fv( rhs ) );
+    else{
+        if( !wasp_is_number( lhs ) ){
+            wasp_errf( wasp_es_vm, "sx", "expected number", lhs );
+        }
+        if( !wasp_is_number( rhs ) ){
+            wasp_errf( wasp_es_vm, "sx", "expected number", rhs );
+        }
+    }
 }
 
 wasp_value wasp_num_divide( wasp_value lhs, wasp_value rhs ){
@@ -173,6 +204,14 @@ wasp_value wasp_num_divide( wasp_value lhs, wasp_value rhs ){
         return wasp_vf_real( wasp_real_fv( lhs ) / wasp_integer_fv( rhs ) );
     else if( wasp_is_real( lhs ) && wasp_is_real( rhs ) )
         return wasp_vf_real( wasp_real_fv( lhs ) / wasp_real_fv( rhs ) );
+    else{
+        if( !wasp_is_number( lhs ) ){
+            wasp_errf( wasp_es_vm, "sx", "expected number", lhs );
+        }
+        if( !wasp_is_number( rhs ) ){
+            wasp_errf( wasp_es_vm, "sx", "expected number", rhs );
+        }
+    }
 }
 
 WASP_BEGIN_PRIM( "+", plus )
