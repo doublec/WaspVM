@@ -292,6 +292,12 @@ WASP_BEGIN_PRIM( "!", bit_not )
     INTEGER_RESULT( base ^ 0xFFFFFFFF );
 WASP_END_PRIM( bit_not )
 
+WASP_BEGIN_PRIM( "real->integer", real_to_integer )
+    REQ_REAL_ARG( base );
+    NO_REST_ARGS( );
+    INTEGER_RESULT( (wasp_integer)base );
+WASP_END_PRIM( bit_not )
+
 void wasp_init_number_subsystem( ){
     WASP_I_TYPE( number );
     wasp_set_global( 
@@ -305,6 +311,7 @@ void wasp_init_number_subsystem( ){
     WASP_BIND_PRIM( bit_left );
     WASP_BIND_PRIM( bit_right );
     WASP_BIND_PRIM( bit_not );
+    WASP_BIND_PRIM( real_to_integer );
     wasp_set_global( 
         wasp_symbol_fs( "*max-int*" ), wasp_vf_integer( WASP_MAX_INT ) );
     wasp_set_global( 
