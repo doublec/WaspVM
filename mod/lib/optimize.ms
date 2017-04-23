@@ -53,9 +53,20 @@
       (else (rewind) (pass))))
 
   (define (optimize-call)
+    (define (skip-symbols)
+      (cond
+       ((symbol? (next))
+        (skip-symbols)
+        (rewind)
+        )
+       (else
+        (if (eq? (car instr) 'retn)
+          (yield '(tail))
+          (yield '(call))))))
+
     (cond 
       ((not (more?)) (pass))
-      ((symbol? (next)) (rewind) (pass))
+      ((symbol? (next)) (skip-symbols) (rewind) (pass))
       ((eq? (car instr) 'retn)
        (yield '(tail))) ; Our optimization for call;retn is tail.
       (else (rewind) (pass))))
