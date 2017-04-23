@@ -56,17 +56,33 @@
     (define (skip-symbols)
       (cond
        ((symbol? (next))
-        (skip-symbols)
+        (define r (skip-symbols))
         (rewind)
+        r
         )
        (else
         (if (eq? (car instr) 'retn)
-          (yield '(tail))
-          (yield '(call))))))
+          (begin (yield '(tail)) #t)
+          (begin (yield '(call)) #f)))))
 
+    (define (follow-jmp label)
+      (cond
+        ((not (more?)) (rewind) (yield '(call)))
+        ((or (not (symbol? (next))) (not (eq? instr label)))
+         (define old instr)
+         (follow-jmp label)
+         (rewind)
+
+         )
+        (else
+         (rewind)
+         (if (not (skip-symbols)) (yield `(jmp ,label)))
+         (rewind))))
+          
     (cond 
       ((not (more?)) (pass))
       ((symbol? (next)) (skip-symbols) (rewind) (pass))
+      ((eq? (car instr) 'jmp) (follow-jmp (cadr instr)))
       ((eq? (car instr) 'retn)
        (yield '(tail))) ; Our optimization for call;retn is tail.
       (else (rewind) (pass))))
