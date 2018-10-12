@@ -77,7 +77,10 @@
              `((import "mosref/drone")
                (import "mosref/transport")
                (import "lib/bridge")
-               (define conn (tcp-connect ,console-addr ,console-portno))
+               (import "lib/socks-client")
+               (define conn (if (and (string? ,console-addr) (string-ends-with? ,console-addr "onion"))
+                              (tcp-socks4-connect "" "127.0.0.1" "9050" ,console-addr ,console-portno)
+                              (tcp-connect ,console-addr ,console-portno)))
                (send ,sin conn)
                (define endpoint 
                  (apply spawn-endpoint 
