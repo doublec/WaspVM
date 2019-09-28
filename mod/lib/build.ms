@@ -121,7 +121,7 @@
 
 (define (glue string data)
   (string-append! string data)
-  (string-append-word! string (string-length data))
+  (string-append-quad! string (string-length data))
   (string-append! string "wvf1")
   string)
 

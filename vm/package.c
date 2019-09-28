@@ -393,11 +393,14 @@ const int wasp_frag_taglen = 4;
 #define TAIL_READ_SHORT( fil, var ) \
     TAIL_READ_VAR( fil, var ); var = ntohs( var );
 
+#define TAIL_READ_QUAD( fil, var ) \
+    TAIL_READ_VAR( fil, var ); var = ntohl( var );
+
 wasp_value wasp_thaw_frag( FILE *f, wasp_integer *inset ) {
     char* code;
-    wasp_word code_len; 
+    wasp_quad code_len;
 
-    TAIL_READ_SHORT( f, code_len );
+    TAIL_READ_QUAD( f, code_len );
     //TODO: This should probably be illegal.
     if( code_len == 0 ) return 0;  
     code = malloc( code_len + 1 );

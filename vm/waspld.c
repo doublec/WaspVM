@@ -32,7 +32,7 @@
 #define GLUELEN		4
 
 typedef struct { 
-    wasp_word size; 
+    wasp_quad size;
     char sig[GLUELEN]; 
 } glue_data;
 
@@ -41,12 +41,12 @@ void cannot(const char* what, const char* name){
     exit(EXIT_FAILURE);
 }
 
-wasp_word copy( const char* inname, FILE* out, const char* outname ){
+wasp_quad copy( const char* inname, FILE* out, const char* outname ){
     FILE* in = fopen( inname, "rb" );
     if( in == NULL ) cannot( "open", inname);
 
     if( fseek( in, 0, SEEK_END ) != 0 )cannot( "seek", inname );
-    wasp_word insize=ftell( in );
+    wasp_quad insize=ftell( in );
 
     if( fseek( in, 0, SEEK_SET ) !=0 )cannot( "seek", inname );
 
@@ -69,9 +69,9 @@ wasp_word copy( const char* inname, FILE* out, const char* outname ){
 }
 
 void glue( const char* fragname, FILE* out, const char* outname ){
-    wasp_word fragsize=copy( fragname, out, outname );
+    wasp_quad fragsize=copy( fragname, out, outname );
 
-    glue_data data = { htons( fragsize ), GLUESIG };
+    glue_data data = { htonl( fragsize ), GLUESIG };
 
     if( fwrite( &data, sizeof( data ), 1, out )!=1 )cannot( "write", outname );
 }
